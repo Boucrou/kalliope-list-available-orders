@@ -43,7 +43,12 @@ class List_available_orders(NeuronModule):
         :rtype: Boolean
         """
 
-        if ignore_machine_name == 1 and re.compile("\w+(-\w)+").match(sentence) is not None:
+        if isinstance(sentence, dict):
+            text_order = sentence['text']
+        else:
+            text_order = sentence
+
+        if ignore_machine_name == 1 and re.compile("\w+(-\w)+").match(text_order) is not None:
             return False
 
         return True
@@ -56,11 +61,15 @@ class List_available_orders(NeuronModule):
         :rtype: String
         """
 
-        s = sentence
+        if isinstance(sentence, dict):
+            s = sentence['text']
+        else:
+            s = sentence
+
         pattern = re.compile("\{\{ *\w+ *\}\}")
 
-        if pattern.search(sentence) is not None and query_replace_text is not None:
-            s = re.sub(pattern, query_replace_text, sentence)
+        if pattern.search(s) is not None and query_replace_text is not None:
+            s = re.sub(pattern, query_replace_text, s)
 
         return s
 
